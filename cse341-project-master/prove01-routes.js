@@ -4,8 +4,7 @@ const requestHandler = (req, res) => {
 
     const url = req.url; // store the url into a const variable
     const method = req.method // such as get, post...
-    //let username = "";
-
+  
     // this is the default url: "/", if there is nothing after localhost:3000, then it will be this "/"
     if (url === '/') {
         res.setHeader('Content-Type', 'text/html');
@@ -17,6 +16,8 @@ const requestHandler = (req, res) => {
     }
 
     if (url === '/users') {
+        //const username = req.username;
+
         res.setHeader('Content-Type', 'text/html');
         res.write('<html>');
         res.write('<title>This is a users page</title>');
@@ -45,12 +46,13 @@ const requestHandler = (req, res) => {
             const parseBody = Buffer.concat(body).toString();
             console.log(parseBody); // this will look like this: message="whatever user input"
             const username = parseBody.split('=')[1]; // we only want the user input which is the element right one the = sign, so we use split here
+            console.log(username);
 
             // write a simple message into a file named message.txt, shouldn't use "sync" cause that will block the code
             fs.writeFile('message.txt', username, (error) => {
                 //console.log(error);
                 res.statusCode = 302; // redirect
-                res.setHeader('Location', '/users');
+                res.setHeader('Location', '/');
                 return res.end();
             });
         })
