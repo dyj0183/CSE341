@@ -24,8 +24,8 @@ const requestHandler = (req, res) => {
         res.write('<ul>');
        
         // run through the for loop to display all the user names
-        userList.forEach((item) => {
-            res.write('<li>' + item + '</li>');
+        userList.forEach((name) => {
+            res.write('<li>' + name + '</li>');
         })
         
         res.write('</ul>');
@@ -54,7 +54,7 @@ const requestHandler = (req, res) => {
             fs.writeFile('message.txt', username, (error) => {
                 //console.log(error);
                 res.statusCode = 302; // redirect
-                res.setHeader('Location', '/users');
+                res.setHeader('Location', '/');
                 return res.end();
             });
         })
