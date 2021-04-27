@@ -1,10 +1,11 @@
 const fs = require('fs'); // import this to work with the file system
+const userList = ["Jamal Murray", "Donovan Mitchell", "Stephen Curry"]; // define a global userList
 
 const requestHandler = (req, res) => {
 
     const url = req.url; // store the url into a const variable
     const method = req.method // such as get, post...
-  
+   
     // this is the default url: "/", if there is nothing after localhost:3000, then it will be this "/"
     if (url === '/') {
         res.setHeader('Content-Type', 'text/html');
@@ -16,17 +17,17 @@ const requestHandler = (req, res) => {
     }
 
     if (url === '/users') {
-        //const username = req.username;
-
         res.setHeader('Content-Type', 'text/html');
         res.write('<html>');
         res.write('<title>This is a users page</title>');
         res.write('<body><h1>Welcome to the users page!</h1></body>');
         res.write('<ul>');
-        res.write('<li>Jamal Murray</li>');
-        res.write('<li>Lebron James</li>');
-        res.write('<li>Donovan Mitchell</li>');
-        //res.write('<li>' + username + '</li>');
+       
+        // run through the for loop to display all the user names
+        userList.forEach((item) => {
+            res.write('<li>' + item + '</li>');
+        })
+        
         res.write('</ul>');
         res.write('</html>');
         return res.end();
@@ -47,12 +48,13 @@ const requestHandler = (req, res) => {
             console.log(parseBody); // this will look like this: message="whatever user input"
             const username = parseBody.split('=')[1]; // we only want the user input which is the element right one the = sign, so we use split here
             console.log(username);
+            userList.push(username); // save this username into userList
 
             // write a simple message into a file named message.txt, shouldn't use "sync" cause that will block the code
             fs.writeFile('message.txt', username, (error) => {
                 //console.log(error);
                 res.statusCode = 302; // redirect
-                res.setHeader('Location', '/');
+                res.setHeader('Location', '/users');
                 return res.end();
             });
         })
