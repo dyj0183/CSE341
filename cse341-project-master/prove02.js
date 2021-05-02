@@ -4,6 +4,9 @@ const express = require('express');
 
 const app = express();
 
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
 // include routes & products
 const prove02Data = require('./routes/prove02');
 
@@ -11,7 +14,11 @@ const prove02Data = require('./routes/prove02');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(prove02Data.routes);
+app.use(prove02Data.routes); // use the "router" from "routes folder's prove02.js"
+
+app.use((req, res, next) => {
+    res.status(404).render('test', { pageTitle: 'Page Not Found!!!'});
+})
 
 app.listen(3000);
 
