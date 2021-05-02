@@ -8,12 +8,35 @@
     <title>Document</title>
     <style>
       
-        body {
-            background-color: lightblue;
+        body {  
+            box-sizing: border-box;
         }
 
         input[type=text] {
             display: block;
+        }
+
+        .container {
+            border: 3px solid lightblue;
+            border-radius: 3px;
+            padding: 10px;
+            margin: 0 auto;
+            width: 700px;
+        }
+
+        #submitButton {
+            background-color: #61ee6d;
+            color: black;
+            width: 100px;
+            height: 30px;
+            padding: auto;
+            text-align: center;
+            border-radius: 3px;
+        }
+
+        #submitButton:hover {
+            background-color: rgb(4, 143, 4);
+
         }
 
     </style>
@@ -22,11 +45,13 @@
 <body>
     <div class="container">
         <form action="/book" method="POST">
-            <label for="title">Enter A Book's Title</label>
-            <input type="text" name="title">
-            <label for="summary">Enter A Book's Summary</label>
-            <input type="text" name="summary">
-            <button type="submit">Submit</button>
+            <h1>Enter A New Book's Title & Summary</h1>
+            <hr>
+            <label for="title">Title</label>
+            <input type="text" name="title" required>
+            <label for="summary">Summary</label>
+            <input type="text" name="summary" required><br>
+            <button type="submit" id="submitButton">Submit</button>
         </form>
     </div>
 </body>

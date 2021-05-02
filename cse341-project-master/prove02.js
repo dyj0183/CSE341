@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(prove02Data.routes); // use the "router" from "routes folder's prove02.js"
 
 app.use((req, res, next) => {
-    res.status(404).render('test', { pageTitle: 'Page Not Found!!!'});
+    res.status(404).render('prove02404', { pageTitle: 'Page Not Found!!!'});
 })
 
 app.listen(3000);
