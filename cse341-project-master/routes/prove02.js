@@ -2,25 +2,13 @@ const express = require('express');
 
 const router = express.Router();
 
-const products = [];
+const productsController = require('../controllers/products');
 
 // the order of middleware matters
 // whether I call next() or not matters as well
-router.get('/add-book', (req, res, next) => {
-    res.render('prove02Form');
-    //res.send('<form action="/book" method="POST"><input type="text" name="title"><button type="submit">Submit A Book</button></form>');
-})
+router.get('/add-book', productsController.getAddBook);
 
-router.post('/book', (req, res, next) => {
-    console.log(req.body);
-    products.push({
-        title: req.body.title,
-        summary: req.body.summary
-    });
-    res.render('prove02Result', { allProducts: products });
-    //res.send("<h1>Thank you for submitting the form.</h1>");
-    //res.redirect("/");
-});
+router.post('/book', productsController.postAddBook);
 
 // router.use('/', (req, res, next) => {
 //     console.log("my / middleware.");
@@ -30,4 +18,4 @@ router.post('/book', (req, res, next) => {
 
 //module.exports = router;
 exports.routes = router;
-exports.products = products;
+//exports.products = products;
