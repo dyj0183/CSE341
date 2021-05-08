@@ -4,6 +4,8 @@ const express = require('express');
 
 const app = express();
 
+const errorControllers = require('./controllers/error.js');
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -16,9 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(prove02Data.routes); // use the "router" from "routes folder's prove02.js"
 
-app.use((req, res, next) => {
-    res.status(404).render('prove02404', { pageTitle: 'Page Not Found!!!'});
-})
+app.use(errorControllers.get404); // take care of 404 scenario
 
 app.listen(3000);
 
