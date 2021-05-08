@@ -25,7 +25,7 @@ const ta03Routes = require('./routes/ta03');
 const ta04Routes = require('./routes/ta04'); 
 
 // added this for prove02 to work on heroku
-const prove02Data = require('./routes/prove02'); 
+const adminData = require('./routes/admin.js'); 
 
 app.use(express.static(path.join(__dirname, 'public')))
    .set('views', path.join(__dirname, 'views'))
@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')))
    .use('/ta02', ta02Routes) 
    .use('/ta03', ta03Routes) 
    .use('/ta04', ta04Routes)
-   .use(prove02Data.routes) // add this for prove02 to work on heroku
+   .use(adminData.routes) // add this for prove02 to work on heroku
    .get('/', (req, res, next) => {
      // This is the primary index, always handled last. 
      res.render('pages/index', {title: 'Welcome to my CSE341 repo', path: '/'});
