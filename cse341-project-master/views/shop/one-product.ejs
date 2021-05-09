@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display all products</title>
+    <title>Display One Product</title>
     <style>
         body {
             box-sizing: border-box;
@@ -36,23 +36,16 @@
 
 <body>
     <div class="container">
-        <% if (allProducts.length > 0) { %>
-            <h1>Thank you for submitting the form!</h1>
-            <hr>
-            <h3>Here are all the products:</h3>
-            <% for (let product of allProducts) { %>
-                <p>Title: <%= product.title %></p>
-                <p>Description: <%= product.description %></p>
-                <p>Price: <%= product.price %></p>
-                <!-- <p>Image Url: <%= product.imageUrl %></p> -->
-                <img src="<%= product.imageUrl %>" alt="" width="300" height="300"><br>
-                <a href="/products/<%= product.id %>">Details</a>
-            <% } %>
-            <br><br>
-            <a href="/add-product">Enter A New Product!</a>
-        <% } else { %>
-            <h1>No products found!</h1>
-        <% } %>
+
+        <h1>Here is the matched product!</h1>
+        <hr>
+
+        <p>Title: <%= product.title %></p>
+        <p>Description: <%= product.description %></p>
+        <p>Price: <%= product.price %></p>
+        <img src="<%= product.imageUrl %>" alt="" width="300" height="300">
+        <!-- <br><br>
+        <a href="/add-product">Enter A New Product!</a> -->
     </div>
 
 </body>

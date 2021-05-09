@@ -25,7 +25,8 @@ const ta03Routes = require('./routes/ta03');
 const ta04Routes = require('./routes/ta04'); 
 
 // added this for prove02 to work on heroku
-const adminData = require('./routes/admin.js'); 
+const adminData = require('./routes/admin.js');
+const shopData = require('./routes/shop.js'); 
 
 app.use(express.static(path.join(__dirname, 'public')))
    .set('views', path.join(__dirname, 'views'))
