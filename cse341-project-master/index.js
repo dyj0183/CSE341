@@ -16,6 +16,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const PORT = process.env.PORT || 5000 // So we can run on heroku || (OR) localhost:5000
 
+const mongoConnect = require('./util/database'); // this is a function
+
 const app = express();
 
 // Route setup. You can implement more in the future!
@@ -51,3 +53,12 @@ app.use(express.static(path.join(__dirname, 'public')))
      res.render('pages/404', {title: '404 - Page Not Found', path: req.url})
    })
    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+
+mongoConnect(client => {
+  console.log(client);
+  app.listen(3000);
+
+})
+
+
