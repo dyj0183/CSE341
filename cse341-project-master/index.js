@@ -14,9 +14,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const PORT = process.env.PORT || 5000 // So we can run on heroku || (OR) localhost:5000
+const mongoose = require('mongoose');
+const cors = require('cors')
 
-const mongoConnect = require('./util/database').mongoConnect; // this is a function
+const corsOptions = {
+   origin: "https://yuchunbookstore.herokuapp.com/",
+   optionsSuccessStatus: 200
+};
+const options = {
+   useUnifiedTopology: true,
+   useNewUrlParser: true,
+   useCreateIndex: true,
+   useFindAndModify: false,
+   family: 4
+};
+const PORT = process.env.PORT || 5000 // So we can run on heroku || (OR) localhost:5000
+const MONGODB_URL = process.env.MONGODB_URL || "mongodb+srv://Jamal:123456abc@cluster0.evuqc.mongodb.net/Shop?retryWrites=true&w=majority";
+
 
 const app = express();
 
@@ -44,6 +58,7 @@ app.use(express.static(path.join(__dirname, 'public')))
    //.engine('hbs', expressHbs({layoutsDir: 'views/layouts/', defaultLayout: 'main-layout', extname: 'hbs'})) // For handlebars
    //.set('view engine', 'hbs')
    .use(bodyParser({extended: false})) // For parsing the body of a POST
+   .use(cors(corsOptions))
    .use('/ta01', ta01Routes)
    .use('/ta02', ta02Routes) 
    .use('/ta03', ta03Routes) 
@@ -57,7 +72,19 @@ app.use(express.static(path.join(__dirname, 'public')))
      // 404 page
      res.render('pages/404', {title: '404 - Page Not Found', path: req.url})
    })
-   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+   //.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+   mongoose
+   .connect(
+     MONGODB_URL, options
+   )
+   .then(result => {
+     console.log("Connected:");
+     app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+   })
+   .catch(err => {
+     console.log(err);
+   });
 
 
 

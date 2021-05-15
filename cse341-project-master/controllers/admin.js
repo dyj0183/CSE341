@@ -12,25 +12,31 @@ exports.postAddProduct = (req, res, next) => {
     .save() // save() method returns a promise
     .then(result => {
         consolo.log("Created a new product");
-        res.redirect('/products');
+        //res.redirect('/products'); 
     })
     .catch((err => {
         console.log(err);
     }));
 
-    Product.fetchAll((products) => {
+    Product.fetchAll
+    .then((products) => {
         res.render('shop/product-list', { allProducts: products });
-    });
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 }
 
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll((products) => {
+    Product.fetchAll
+    .then(products => {
         res.render('admin/products', {
             allProducts: products,
             pageTitle: 'Admin Products',
             path: '/products'
         });
-    });
+    })
+    .catch(err => console.log(err));
 }
 
 exports.getOneProduct = (req, res, next) => {
@@ -43,4 +49,25 @@ exports.getOneProduct = (req, res, next) => {
             product: product,
         });
     });
+}
+
+exports.getEditProduct = (req, res, next) => {
+    const editMode = req.query.edit;
+    if (!editMode) {
+        return res.redirect('/');
+    }
+    const productId = req.params.productId;
+    Product.findById(productId)
+    .then(product => {
+        if (!product) {
+            return res.redirect('/');
+        }
+        res.render('admin/edit-product', {
+            pageTitle: 'Edit Product',
+            path: '/admin/edit-product',
+            editing: editMode,
+            product: product
+        });
+    })
+    .catch(err => console.log(err));
 }
