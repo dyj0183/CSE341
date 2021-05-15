@@ -16,7 +16,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const PORT = process.env.PORT || 5000 // So we can run on heroku || (OR) localhost:5000
 
-const mongoConnect = require('./util/database'); // this is a function
+const mongoConnect = require('./util/database').mongoConnect; // this is a function
 
 const app = express();
 
@@ -29,6 +29,11 @@ const ta04Routes = require('./routes/ta04');
 // added this for prove02 to work on heroku
 const adminData = require('./routes/admin.js');
 const shopData = require('./routes/shop.js'); 
+
+// mongoConnect(client => {
+//   console.log(client);
+//   // app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+// })
 
 app.use(express.static(path.join(__dirname, 'public')))
    .set('views', path.join(__dirname, 'views'))
@@ -55,10 +60,6 @@ app.use(express.static(path.join(__dirname, 'public')))
    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 
-mongoConnect(client => {
-  console.log(client);
-  app.listen(3000);
 
-})
 
 

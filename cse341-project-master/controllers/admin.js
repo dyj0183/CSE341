@@ -8,7 +8,15 @@ exports.addProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
     const product = new Product(req.body.title, req.body.imageUrl, req.body.price, req.body.description);
 
-    product.save();
+    product
+    .save() // save() method returns a promise
+    .then(result => {
+        consolo.log("Created a new product");
+        res.redirect('/products');
+    })
+    .catch((err => {
+        console.log(err);
+    }));
 
     Product.fetchAll((products) => {
         res.render('shop/product-list', { allProducts: products });

@@ -1,6 +1,8 @@
 const fs = require('fs'); // import file module to read and write files
 const path = require('path');
 
+const getDb = require("../util/database").getDb;
+
 // cause we use path.join(), it will work on all the operating systems including windows and linux link to the data foler
 const myPath = path.join(path.dirname(process.mainModule.filename), 'data', 'products.json');
 
@@ -21,6 +23,19 @@ module.exports = class Product {
         this.imageUrl = newImageUrl;
         this.price = newPrice;
         this.description = newDescription;
+    }
+
+    // new save method for mongoDB
+    save() {
+        const db = getDb();
+        return db.collection('products')
+        .insertOne(this) // we connect to a "products" collection, insert one object which is "this", returns a promise
+        .then(result => {
+            console.log(result);
+        })
+        .catch(err => {
+            console.log(err);
+        });
     }
 
     save() {
