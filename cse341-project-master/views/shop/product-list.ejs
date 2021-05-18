@@ -1,60 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('../includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/product.css">
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display all products</title>
-    <style>
-        body {
-            box-sizing: border-box;
-        }
+    <body>
+        <%- include('../includes/navigation.ejs') %>
 
-        .container {
-            border: 3px solid lightblue;
-            border-radius: 3px;
-            padding: 10px;
-            margin: 0 auto;
-            width: 500px;
-        }
-
-        a:link {
-            background-color: #61ee6d;
-            color: white;
-            padding: 14px 25px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        a:hover {
-            background-color: rgb(4, 143, 4);
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <% if (allProducts.length > 0) { %>
-            <h1>Thank you for submitting the form!</h1>
-            <hr>
-            <h3>Here are all the products:</h3>
-            <% for (let product of allProducts) { %>
-                <p>Title: <%= product.title %></p>
-                <p>Description: <%= product.description %></p>
-                <p>Price: <%= product.price %></p>
-                <!-- <p>Image Url: <%= product.imageUrl %></p> -->
-                <img src="<%= product.imageUrl %>" alt="" width="300" height="300"><br>
-                <a href="/products/<%= product._id %>">Details</a>
-            <% } %>
-            <br><br>
-            <a href="/add-product">Enter A New Product!</a>
-        <% } else { %>
-            <h1>No products found!</h1>
-        <% } %>
-    </div>
-
-</body>
-
-</html>
+            <main>
+                <% if (prods.length > 0) { %>
+                    <div class="grid">
+                        <% for (let product of prods) { %>
+                            <article class="card product-item">
+                                <header class="card__header">
+                                    <h1 class="product__title">
+                                        <%= product.title %>
+                                    </h1>
+                                </header>
+                                <div class="card__image">
+                                    <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
+                                </div>
+                                <div class="card__content">
+                                    <h2 class="product__price">$
+                                        <%= product.price %>
+                                    </h2>
+                                    <p class="product__description">
+                                        <%= product.description %>
+                                    </p>
+                                </div>
+                                <div class="card__actions">
+                                    <a href="/products/<%= product._id %>" class="btn">Details</a>
+                                    <%- include('../includes/add-to-cart.ejs', {product: product}) %>
+                                </div>
+                            </article>
+                            <% } %>
+                    </div>
+                    <% } else { %>
+                        <h1>No Products Found!</h1>
+                        <% } %>
+            </main>
+            <%- include('../includes/end.ejs') %>

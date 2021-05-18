@@ -1,92 +1,56 @@
-/*******************************************************************************
- * Feel free to remove this comment block and all other comments after pulling. 
- * They're for information purposes only.
- * 
- * This layout is provided to you for an easy and quick setup to either pull
- * or use to correct yours after working at least 1 hour on Team Activity 02.
- * Throughout the course, we'll be using Express.js for our view engines.
- * However, feel free to use pug or handlebars ('with extension hbs'). You will
- * need to make sure you install them beforehand according to the reading from
- * Udemy course. 
- * IMPORTANT: Make sure to run "npm install" in your root before "npm start"
- *******************************************************************************/
-// Our initial setup (package requires, port number setup)
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
 const mongoose = require('mongoose');
-const cors = require('cors')
 
-const corsOptions = {
-   origin: "https://yuchunbookstore.herokuapp.com/",
-   optionsSuccessStatus: 200
-};
-const options = {
-   useUnifiedTopology: true,
-   useNewUrlParser: true,
-   useCreateIndex: true,
-   useFindAndModify: false,
-   family: 4
-};
-const PORT = process.env.PORT || 5000 // So we can run on heroku || (OR) localhost:5000
-const MONGODB_URL = process.env.MONGODB_URL || "mongodb+srv://Jamal:123456abc@cluster0.evuqc.mongodb.net/Shop?retryWrites=true&w=majority";
-
+const errorController = require('./controllers/error');
+const User = require('./models/user');
 
 const app = express();
 
-// Route setup. You can implement more in the future!
-const ta01Routes = require('./routes/ta01');
-const ta02Routes = require('./routes/ta02');
-const ta03Routes = require('./routes/ta03'); 
-const ta04Routes = require('./routes/ta04'); 
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-// added this for prove02 to work on heroku
-const adminData = require('./routes/admin.js');
-const shopData = require('./routes/shop.js'); 
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-// mongoConnect(client => {
-//   console.log(client);
-//   // app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
-// })
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.static(path.join(__dirname, 'public')))
-   .set('views', path.join(__dirname, 'views'))
-   .set('view engine', 'ejs')
-   // For view engine as Pug
-   //.set('view engine', 'pug') // For view engine as PUG. 
-   // For view engine as hbs (Handlebars)
-   //.engine('hbs', expressHbs({layoutsDir: 'views/layouts/', defaultLayout: 'main-layout', extname: 'hbs'})) // For handlebars
-   //.set('view engine', 'hbs')
-   .use(bodyParser({extended: false})) // For parsing the body of a POST
-   .use(cors(corsOptions))
-   .use('/ta01', ta01Routes)
-   .use('/ta02', ta02Routes) 
-   .use('/ta03', ta03Routes) 
-   .use('/ta04', ta04Routes)
-   .use(adminData.routes) // add this for prove02 to work on heroku
-   .get('/', (req, res, next) => {
-     // This is the primary index, always handled last. 
-     res.render('pages/index', {title: 'Welcome to my CSE341 repo', path: '/'});
+app.use((req, res, next) => {
+  User.findById('60a3154c96a6034cfc57b7ff')
+    .then(user => {
+      req.user = user;
+      next();
     })
-   .use((req, res, next) => {
-     // 404 page
-     res.render('pages/404', {title: '404 - Page Not Found', path: req.url})
-   })
-   //.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+    .catch(err => console.log(err));
+});
 
-   mongoose
-   .connect(
-     MONGODB_URL, options
-   )
-   .then(result => {
-     console.log("Connected:");
-     app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
-   })
-   .catch(err => {
-     console.log(err);
-   });
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
+app.use(errorController.get404);
 
-
-
-
+mongoose
+  .connect(
+    'mongodb+srv://Jamal:123456abc@cluster0.evuqc.mongodb.net/shop?retryWrites=true&w=majority'
+  )
+  .then(result => {
+    User.findOne().then(user => {
+      if (!user) {
+        const user = new User({
+          name: 'Jamal',
+          email: 'jamal@test.com',
+          cart: {
+            items: []
+          }
+        });
+        user.save();
+      }
+    });
+    app.listen(5000);
+  })
+  .catch(err => {
+    console.log(err);
+  });
